@@ -39,8 +39,9 @@ php artisan migrate --force
 if [ "$FIRST" = "1" ]; then
   echo ">> Seeding data awal (akun admin, pengumuman, dll)..."
   php artisan db:seed --force
-  echo ">> Membuat symlink storage..."
-  php artisan storage:link
+  echo ">> Membuat symlink storage (manual, hindari exec() yang diblokir Hostinger)..."
+  mkdir -p storage/app/public
+  ln -sfn ../storage/app/public public/storage
 fi
 
 echo ">> Membersihkan & membangun ulang cache..."
