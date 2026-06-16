@@ -6,8 +6,9 @@
 #   bash deploy.sh            -> update biasa (pull, composer, migrate, cache)
 #   bash deploy.sh --first    -> setup pertama kali (termasuk seed akun & storage:link)
 #
-# Catatan: aset frontend (public/build) dibuild di komputer lokal dan
-#          di-upload manual, TIDAK ditangani skrip ini.
+# Catatan: aset frontend (public/build) sudah ikut di Git, jadi otomatis
+#          ikut tertarik saat 'git pull'. Build ulang di lokal hanya jika
+#          ada perubahan CSS/JS, lalu commit & push.
 # =====================================================================
 set -e
 
@@ -57,5 +58,4 @@ if [ "$FIRST" = "1" ]; then
   echo "  superadmin@example.com / password"
   echo "  admin@gmail.com        / password"
   echo "Jangan lupa: arahkan document root domain ke folder 'public'."
-  echo "Dan upload folder 'public/build' dari komputer lokal."
 fi
