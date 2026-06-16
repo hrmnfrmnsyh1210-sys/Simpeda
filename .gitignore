@@ -1,6 +1,6 @@
 /.phpunit.cache
 /node_modules
-/public/build
+# /public/build  -> sengaja di-commit agar deploy ke shared hosting (tanpa Node) bawa aset
 /public/hot
 /public/storage
 /storage/*.key
