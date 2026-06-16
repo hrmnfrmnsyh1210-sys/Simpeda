@@ -101,22 +101,33 @@ Folder `public/build` (hasil `npm run build`) TIDAK ada di Git. Upload manual:
 
 ## 6. Buat file `.env` di server
 
-Di folder `simpeda`, buat `.env` (lihat template `ENV PRODUCTION` di bawah / file `.env.production.example`).
-Lalu:
+Di folder `simpeda`, buat `.env` dari template lalu isi kredensial database:
+```bash
+cp .env.production.example .env
+nano .env        # isi DB_DATABASE, DB_USERNAME, DB_PASSWORD, APP_URL
+```
 
+### Cara cepat — pakai skrip `deploy.sh`
+Setup pertama kali cukup jalankan:
+```bash
+bash deploy.sh --first
+```
+Skrip ini otomatis: `composer install` → `key:generate` → `migrate` → `db:seed`
+(akun awal) → `storage:link` → build cache → set permission.
+
+### Cara manual (jika tidak pakai skrip)
 ```bash
 php artisan key:generate          # isi APP_KEY otomatis
 php artisan migrate --force       # buat tabel di MySQL
+php artisan db:seed --force       # isi akun admin + data awal
 php artisan storage:link          # symlink storage publik
-php artisan config:cache
-php artisan route:cache
-php artisan view:cache
-```
-
-Set permission folder yang perlu ditulis:
-```bash
+php artisan config:cache && php artisan route:cache && php artisan view:cache
 chmod -R 775 storage bootstrap/cache
 ```
+
+> **Akun default (WAJIB ganti password setelah login!):**
+> - `superadmin@example.com` / `password`
+> - `admin@gmail.com` / `password`
 
 ---
 
@@ -158,9 +169,6 @@ git add -A && git commit -m "update" && git push origin main
 
 # server (via SSH)
 cd ~/domains/NAMADOMAIN.com/simpeda
-git pull origin main
-composer install --no-dev --optimize-autoloader
-php artisan migrate --force
-php artisan config:cache && php artisan route:cache && php artisan view:cache
+bash deploy.sh             # pull + composer + migrate + cache otomatis
 # upload ulang public/build bila aset berubah
 ```
