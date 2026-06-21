@@ -3,14 +3,8 @@
 
     {{-- Brand --}}
     <div class="p-5 flex items-center gap-3 border-b border-white/10 flex-shrink-0">
-        <div
-            class="w-9 h-9 bg-gradient-to-br from-[#2d7af0] to-primary rounded-xl flex items-center justify-center shadow-lg">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"
-                stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 2L2 7l10 5 10-5-10-5z" />
-                <path d="M2 17l10 5 10-5M2 12l10 5 10-5" />
-            </svg>
-        </div>
+        <img src="{{ asset('logo.png') }}" alt="Logo SiMPeDa"
+            class="w-9 h-9 rounded-xl object-contain bg-white p-1 shadow-lg">
         <div class="leading-none">
             <div class="font-grotesk font-bold text-white text-base tracking-tight">SiMPeDa</div>
             <div class="text-[10px] text-white/40 uppercase tracking-wider mt-0.5">Pengaduan</div>
