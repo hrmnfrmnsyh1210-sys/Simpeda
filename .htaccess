@@ -1,0 +1,14 @@
+# =====================================================================
+# Arahkan semua request ke folder public/ (entry point Laravel).
+# Diperlukan saat document root domain menunjuk ke root repo (public_html),
+# bukan ke folder public. Mencegah error 403 Forbidden.
+# =====================================================================
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Jangan rewrite jika file/folder yang diminta sudah ada di public/
+    RewriteCond %{REQUEST_URI} !^/public/
+
+    # Teruskan semua request ke dalam folder public/
+    RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>
