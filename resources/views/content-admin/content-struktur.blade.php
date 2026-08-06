@@ -88,14 +88,16 @@
                                         class="w-8 h-8 flex items-center justify-center border border-gray-200 rounded-lg text-gray-400 hover:text-primary hover:border-primary-light hover:bg-primary-light transition-all">
                                         <i class="bi bi-pencil"></i>
                                     </button>
-                                    <form action="{{ route('admin.struktur.destroy', $s) }}" method="POST"
-                                          onsubmit="return confirm('Hapus {{ $s->nama }} ({{ $s->jabatan }})?')">
-                                        @csrf @method('DELETE')
-                                        <button type="submit"
-                                            class="w-8 h-8 flex items-center justify-center border border-gray-200 rounded-lg text-gray-400 hover:text-red-600 hover:border-red-200 hover:bg-red-50 transition-all">
-                                            <i class="bi bi-trash"></i>
-                                        </button>
-                                    </form>
+                                    @if(config('features.hapus_superadmin'))
+                                        <form action="{{ route('admin.struktur.destroy', $s) }}" method="POST"
+                                              onsubmit="return confirm('Hapus {{ $s->nama }} ({{ $s->jabatan }})?')">
+                                            @csrf @method('DELETE')
+                                            <button type="submit"
+                                                class="w-8 h-8 flex items-center justify-center border border-gray-200 rounded-lg text-gray-400 hover:text-red-600 hover:border-red-200 hover:bg-red-50 transition-all">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
+                                    @endif
                                 </div>
                             </td>
                         </tr>

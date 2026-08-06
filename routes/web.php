@@ -51,6 +51,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/pengaduan/{id}', [PengaduanAdminController::class, 'show'])->name('pengaduan.show');
     Route::patch('/pengaduan/{id}/update-status', [PengaduanAdminController::class, 'updateStatus'])->name('pengaduan.updateStatus');
     Route::post('/pengaduan/{id}/tanggapan', [PengaduanAdminController::class, 'storeTanggapan'])->name('pengaduan.tanggapan.store');
+    Route::delete('/pengaduan/{id}', [PengaduanAdminController::class, 'destroy'])->name('pengaduan.destroy'); // dinonaktifkan via config('features.hapus_superadmin')
 
     // Kategori
     Route::get('/kategori', [KategoriController::class, 'index'])->name('kategori.index');

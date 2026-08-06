@@ -89,6 +89,8 @@ class PengumumanController extends Controller
 
     public function destroy(Pengumuman $pengumuman)
     {
+        abort_unless(config('features.hapus_superadmin'), 403, 'Fitur hapus sedang dinonaktifkan.');
+
         $judul = $pengumuman->judul;
         if ($pengumuman->gambar) Storage::disk('public')->delete($pengumuman->gambar);
         $pengumuman->delete();

@@ -82,6 +82,8 @@ class StrukturOrganisasiController extends Controller
 
     public function destroy(StrukturOrganisasi $struktur)
     {
+        abort_unless(config('features.hapus_superadmin'), 403, 'Fitur hapus sedang dinonaktifkan.');
+
         $jabatan = $struktur->jabatan;
         $nama    = $struktur->nama;
         $struktur->delete();

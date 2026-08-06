@@ -169,4 +169,27 @@ class PengaduanAdminController extends Controller
 
         return $pdf->download($filename);
     }
+
+    /**
+     * Hapus Pengaduan (Hanya untuk Superadmin).
+     * Sedang dinonaktifkan sementara lewat config('features.hapus_superadmin').
+     */
+    public function destroy($id)
+    {
+        abort_unless(config('features.hapus_superadmin'), 403, 'Fitur hapus sedang dinonaktifkan.');
+
+        $pengaduan = Pengaduan::findOrFail($id);
+        $tiket = $pengaduan->nomor_tiket;
+        $pengaduan->delete();
+
+        ActivityLog::create([
+            'user_id'    => Auth::id(),
+            'action'     => 'Hapus Pengaduan',
+            'target'     => 'Tiket #' . $tiket,
+            'keterangan' => 'Pengaduan dengan nomor tiket ' . $tiket . ' dihapus.',
+            'ip_address' => request()->ip(),
+        ]);
+
+        return redirect()->route('admin.pengaduan.index')->with('success', 'Data pengaduan telah dihapus.');
+    }
 }
