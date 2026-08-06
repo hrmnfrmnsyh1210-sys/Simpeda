@@ -74,7 +74,7 @@ class UserAdminController extends Controller
 
     public function destroy(Request $request, User $user)
     {
-        abort_unless(config('features.hapus_superadmin'), 403, 'Fitur hapus sedang dinonaktifkan.');
+        abort_unless(config('features.hapus_users'), 403, 'Fitur hapus sedang dinonaktifkan.');
 
         if ($user->id === Auth::id()) {
             return back()->with('error', 'Tidak dapat menghapus akun sendiri.');

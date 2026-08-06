@@ -199,7 +199,7 @@ class PengaduanAdminController extends Controller
      */
     public function destroy($id)
     {
-        abort_unless(config('features.hapus_superadmin'), 403, 'Fitur hapus sedang dinonaktifkan.');
+        abort_unless(config('features.hapus_pengaduan'), 403, 'Fitur hapus sedang dinonaktifkan.');
 
         $pengaduan = Pengaduan::findOrFail($id);
         $tiket = $pengaduan->nomor_tiket;

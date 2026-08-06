@@ -5,14 +5,24 @@
 @section('content')
 
     {{-- Header --}}
-    <div class="mb-6">
-        <div class="flex items-center gap-2 text-sm text-gray-500 mb-2">
-            <a href="{{ route('admin.dashboard') }}" class="text-primary hover:underline">Dashboard</a>
-            <i class="bi bi-chevron-right text-[10px]"></i>
-            <span class="text-gray-400">Statistik Pengunjung</span>
+    <div class="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+            <div class="flex items-center gap-2 text-sm text-gray-500 mb-2">
+                <a href="{{ route('admin.dashboard') }}" class="text-primary hover:underline">Dashboard</a>
+                <i class="bi bi-chevron-right text-[10px]"></i>
+                <span class="text-gray-400">Statistik Pengunjung</span>
+            </div>
+            <h1 class="font-grotesk text-2xl font-bold text-gray-800 tracking-tight">Statistik Pengunjung</h1>
+            <p class="text-sm text-gray-500 mt-1">Jumlah pengunjung unik aplikasi (dihitung per sesi per hari).</p>
         </div>
-        <h1 class="font-grotesk text-2xl font-bold text-gray-800 tracking-tight">Statistik Pengunjung</h1>
-        <p class="text-sm text-gray-500 mt-1">Jumlah pengunjung unik aplikasi (dihitung per sesi per hari).</p>
+
+        <div class="flex items-center gap-2">
+            <a href="{{ route('admin.statistik.exportPdf') }}"
+               target="_blank"
+               class="px-4 py-2 bg-white border border-[#e2e8f0] rounded-lg text-xs font-bold text-gray-600 hover:bg-red-50 hover:border-red-200 hover:text-red-600 transition-all flex items-center gap-2 shadow-sm">
+                <i class="bi bi-file-earmark-pdf"></i> Ekspor Laporan Pengunjung (PDF)
+            </a>
+        </div>
     </div>
 
     {{-- Kartu Ringkasan --}}

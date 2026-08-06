@@ -88,7 +88,7 @@
                                         class="w-8 h-8 flex items-center justify-center border border-gray-200 rounded-lg text-gray-400 hover:text-primary hover:border-primary-light hover:bg-primary-light transition-all">
                                         <i class="bi bi-pencil"></i>
                                     </button>
-                                    @if(config('features.hapus_superadmin'))
+                                    @if(config('features.hapus_struktur'))
                                         <form action="{{ route('admin.struktur.destroy', $s) }}" method="POST"
                                               onsubmit="return confirm('Hapus {{ $s->nama }} ({{ $s->jabatan }})?')">
                                             @csrf @method('DELETE')

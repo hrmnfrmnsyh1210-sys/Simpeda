@@ -59,6 +59,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
     // Statistik Pengunjung
     Route::get('/statistik-pengunjung', [StatistikController::class, 'index'])->name('statistik.index');
+    Route::get('/statistik-pengunjung/export/pdf', [StatistikController::class, 'exportPdf'])->name('statistik.exportPdf');
 
     // Struktur Organisasi Kantor Desa
     Route::get('/struktur', [StrukturOrganisasiController::class, 'index'])->name('struktur.index');

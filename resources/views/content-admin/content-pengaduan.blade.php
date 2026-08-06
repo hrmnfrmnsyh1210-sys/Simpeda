@@ -206,7 +206,7 @@
                                     </div>
 
                                     {{-- Tombol Hapus (Super Admin Only, sedang dinonaktifkan) --}}
-                                    @if(Auth::user()->role === 'superadmin' && config('features.hapus_superadmin'))
+                                    @if(Auth::user()->role === 'superadmin' && config('features.hapus_pengaduan'))
                                         <form action="{{ route('admin.pengaduan.destroy', $item->id) }}" method="POST"
                                             onsubmit="return confirm('Hapus pengaduan #{{ $item->nomor_tiket }}?')">
                                             @csrf @method('DELETE')

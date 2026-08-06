@@ -4,11 +4,31 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\PageVisit;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\CarbonImmutable;
 
 class StatistikController extends Controller
 {
     public function index()
+    {
+        return view('content-admin.content-statistik-pengunjung', $this->hitungStatistik());
+    }
+
+    public function exportPdf()
+    {
+        $pdf = Pdf::loadView('content-admin.pdf-statistik', $this->hitungStatistik())
+            ->setPaper('a4', 'portrait');
+
+        $filename = 'laporan-pengunjung-' . now()->format('Ymd-His') . '.pdf';
+
+        return $pdf->download($filename);
+    }
+
+    /**
+     * Hitung rekap kunjungan harian/mingguan/bulanan + ringkasan.
+     * Dipakai bersama oleh halaman statistik dan export PDF-nya.
+     */
+    private function hitungStatistik(): array
     {
         // Ambil rekap kunjungan harian (dihitung di level DB, kolom visited_date polos)
         // untuk 180 hari terakhir, lalu disusun ulang di PHP jadi bucket harian/mingguan/bulanan
@@ -64,11 +84,11 @@ class StatistikController extends Controller
         }
 
         $ringkasan = [
-            'hari_ini'     => $harianMentah[today()->toDateString()] ?? 0,
-            'minggu_ini'   => $mingguan->last()['jumlah'] ?? 0,
-            'bulan_ini'    => $bulanan->last()['jumlah'] ?? 0,
+            'hari_ini'   => $harianMentah[today()->toDateString()] ?? 0,
+            'minggu_ini' => $mingguan->last()['jumlah'] ?? 0,
+            'bulan_ini'  => $bulanan->last()['jumlah'] ?? 0,
         ];
 
-        return view('content-admin.content-statistik-pengunjung', compact('harian', 'mingguan', 'bulanan', 'ringkasan'));
+        return compact('harian', 'mingguan', 'bulanan', 'ringkasan');
     }
 }

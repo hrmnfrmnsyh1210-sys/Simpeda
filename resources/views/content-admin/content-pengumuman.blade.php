@@ -87,7 +87,7 @@
                                         class="w-8 h-8 flex items-center justify-center border border-gray-200 rounded-lg text-gray-400 hover:text-primary hover:bg-primary-light hover:border-primary-light">
                                         <i class="bi bi-pencil"></i>
                                     </button>
-                                    @if(Auth::user()->role === 'superadmin' && config('features.hapus_superadmin'))
+                                    @if(Auth::user()->role === 'superadmin' && config('features.hapus_pengumuman'))
                                         <form action="{{ route('admin.pengumuman.destroy', $p) }}" method="POST"
                                               onsubmit="return confirm('Hapus pengumuman ini?')">
                                             @csrf @method('DELETE')

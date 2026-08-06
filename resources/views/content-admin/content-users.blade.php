@@ -112,7 +112,7 @@
                                             </button>
                                         </form>
                                         {{-- Hapus --}}
-                                        @if(Auth::user()->role === 'superadmin' && config('features.hapus_superadmin'))
+                                        @if(Auth::user()->role === 'superadmin' && config('features.hapus_users'))
                                             <form action="{{ route('admin.users.destroy', $user) }}" method="POST"
                                                 onsubmit="return confirm('Hapus akun {{ $user->name }}?')">
                                                 @csrf @method('DELETE')

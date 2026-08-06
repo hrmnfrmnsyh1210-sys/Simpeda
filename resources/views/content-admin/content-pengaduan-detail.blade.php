@@ -331,7 +331,7 @@
             </div>
 
             {{-- Hapus (superadmin only, sedang dinonaktifkan) --}}
-            @if(Auth::user()->role === 'superadmin' && config('features.hapus_superadmin'))
+            @if(Auth::user()->role === 'superadmin' && config('features.hapus_pengaduan'))
                 <div class="bg-white rounded-radius border border-red-100 shadow-sm p-5">
                     <h3 class="font-bold text-red-600 text-xs uppercase tracking-wider mb-3 flex items-center gap-2">
                         <i class="bi bi-exclamation-triangle"></i> Zona Berbahaya

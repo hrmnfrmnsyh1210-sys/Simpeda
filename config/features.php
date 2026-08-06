@@ -7,14 +7,15 @@ return [
     | Fitur Hapus (Panel Superadmin)
     |--------------------------------------------------------------------------
     |
-    | Saklar tunggal untuk semua tombol & endpoint hapus di panel admin yang
-    | hanya bisa diakses superadmin: Pengaduan, Pengumuman, Struktur
-    | Organisasi, dan Manajemen Akun. Sedang dinonaktifkan sementara.
-    |
-    | Untuk mengaktifkan lagi: set FEATURE_HAPUS_SUPERADMIN=true di .env,
-    | lalu jalankan `php artisan config:clear` (atau config:cache ulang).
+    | Saklar per-area untuk tombol & endpoint hapus di panel superadmin.
+    | Manajemen Akun, Struktur Organisasi, dan Pengumuman aktif kembali.
+    | Hapus Pengaduan sengaja tetap dinonaktifkan (riwayat pengaduan tidak
+    | boleh dihapus dari sistem).
     |
     */
-    'hapus_superadmin' => env('FEATURE_HAPUS_SUPERADMIN', false),
+    'hapus_pengaduan'  => env('FEATURE_HAPUS_PENGADUAN', false),
+    'hapus_users'      => env('FEATURE_HAPUS_USERS', true),
+    'hapus_struktur'   => env('FEATURE_HAPUS_STRUKTUR', true),
+    'hapus_pengumuman' => env('FEATURE_HAPUS_PENGUMUMAN', true),
 
 ];
