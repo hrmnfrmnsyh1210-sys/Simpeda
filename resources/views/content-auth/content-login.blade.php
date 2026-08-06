@@ -216,10 +216,7 @@
 
     {{-- Footer --}}
     <div class="anim-footer text-center mt-6 text-[13px] text-slate-500">
-        Belum punya akun?
-        <a href="{{ route('register') }}" class="text-[#1a56db] font-semibold hover:underline">
-            Daftar sebagai masyarakat
-        </a>
+        Belum punya akun warga? Gunakan tombol <strong>Masuk / Daftar dengan Google</strong> di atas.
     </div>
 
 @endsection

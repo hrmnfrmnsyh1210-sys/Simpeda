@@ -9,7 +9,6 @@ use App\Http\Controllers\Admin\PengumumanController;
 use App\Http\Controllers\Admin\StrukturOrganisasiController;
 use App\Http\Controllers\Admin\UserAdminController;
 use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\SocialAuthController;
 use App\Http\Controllers\Beranda\berandaUserController;
 use App\Http\Controllers\Beranda\DashboardWargaController;
@@ -28,8 +27,8 @@ Route::middleware('guest')->group(function () {
     Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [LoginController::class, 'login']);
 
-    // Pendaftaran akun masyarakat (Google Sign-In)
-    Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
+    // Pendaftaran akun masyarakat kini lewat Google (halaman /register lama tidak dipakai lagi)
+    Route::redirect('/register', '/login/google')->name('register');
 
     // Masuk/daftar warga dengan akun Google
     Route::get('/login/google', [SocialAuthController::class, 'redirectToGoogle'])->name('google.redirect');

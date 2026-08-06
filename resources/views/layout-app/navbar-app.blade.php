@@ -57,7 +57,7 @@
                         </button>
                     </form>
                 @else
-                    <a href="{{ route('register') }}"
+                    <a href="{{ route('google.redirect') }}"
                         class="px-4 py-2 text-sm font-semibold text-white/90 hover:text-white hover:bg-white/10 rounded-xl transition-all">
                         Daftar
                     </a>
@@ -114,7 +114,7 @@
                             class="w-full text-center px-3 py-2 rounded-lg text-sm font-semibold bg-white text-brand-700 hover:bg-brand-50 transition">Keluar</button>
                     </form>
                 @else
-                    <a href="{{ route('register') }}"
+                    <a href="{{ route('google.redirect') }}"
                         class="flex-1 text-center px-3 py-2 rounded-lg text-sm font-semibold text-white/80 hover:bg-white/10 transition">Daftar</a>
                     <a href="{{ route('login') }}"
                         class="flex-1 text-center px-3 py-2 rounded-lg text-sm font-semibold bg-white text-brand-700 hover:bg-brand-50 transition">Masuk</a>
