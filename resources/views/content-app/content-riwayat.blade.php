@@ -96,9 +96,20 @@
                 <select name="status"
                     class="filter-input h-10 px-3 border border-slate-200 rounded-xl text-sm bg-slate-50 text-slate-700 transition-all min-w-[140px]">
                     <option value="">Semua Status</option>
-                    @foreach(['diterima', 'diverifikasi', 'diproses', 'selesai'] as $s)
+                    @foreach(['Menunggu', 'Diproses', 'Selesai', 'Ditolak'] as $s)
                         <option value="{{ $s }}" {{ request('status') === $s ? 'selected' : '' }}>
-                            {{ ucfirst($s) }}
+                            {{ $s }}
+                        </option>
+                    @endforeach
+                </select>
+
+                {{-- Filter Kategori --}}
+                <select name="kategori"
+                    class="filter-input h-10 px-3 border border-slate-200 rounded-xl text-sm bg-slate-50 text-slate-700 transition-all min-w-[160px]">
+                    <option value="">Semua Kategori</option>
+                    @foreach(['Infrastruktur', 'Kebersihan', 'Keamanan', 'Administrasi', 'Sosial', 'Lainnya'] as $k)
+                        <option value="{{ $k }}" {{ request('kategori') === $k ? 'selected' : '' }}>
+                            {{ $k }}
                         </option>
                     @endforeach
                 </select>
@@ -108,7 +119,7 @@
                     Filter
                 </button>
 
-                @if(request()->hasAny(['q', 'status']))
+                @if(request()->hasAny(['q', 'status', 'kategori']))
                     {{-- PERUBAHAN: Link reset mengarah kembali ke route riwayat tanpa param --}}
                     <a href="{{ route('riwayat') }}"
                         class="h-10 px-4 flex items-center gap-1.5 border border-slate-200 text-slate-500 text-sm rounded-xl hover:bg-slate-50 transition-all shrink-0">
@@ -162,14 +173,14 @@
                                     <td class="px-5 py-4">
                                         @php
                                             $statusColor = match ($item->status) {
-                                                'selesai' => 'bg-green-100 text-green-700',
-                                                'diproses' => 'bg-blue-100 text-blue-700',
-                                                'diverifikasi' => 'bg-violet-100 text-violet-700',
+                                                'Selesai' => 'bg-green-100 text-green-700',
+                                                'Diproses' => 'bg-blue-100 text-blue-700',
+                                                'Ditolak' => 'bg-red-100 text-red-700',
                                                 default => 'bg-amber-100 text-amber-700',
                                             };
                                         @endphp
                                         <span class="text-xs font-semibold px-2.5 py-1 rounded-full {{ $statusColor }}">
-                                            {{ ucfirst($item->status) }}
+                                            {{ $item->status }}
                                         </span>
                                     </td>
                                     <td class="px-5 py-4 text-slate-400 text-xs whitespace-nowrap">

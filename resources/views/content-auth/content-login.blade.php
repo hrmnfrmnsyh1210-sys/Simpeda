@@ -88,16 +88,36 @@
 
     {{-- Card --}}
     <div class="anim-card bg-white rounded-[20px] p-9 shadow-card border border-slate-100">
+
+        {{-- Masuk sebagai Warga --}}
+        <a href="{{ route('google.redirect') }}"
+            class="w-full h-[50px] flex items-center justify-center gap-3 border-[1.5px] border-slate-200 rounded-xl text-[15px] font-semibold text-slate-700 hover:bg-slate-50 transition-all duration-200">
+            <svg class="w-5 h-5" viewBox="0 0 48 48">
+                <path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.1 8 3l6-6C34.5 5.1 29.5 3 24 3 12.4 3 3 12.4 3 24s9.4 21 21 21 21-9.4 21-21c0-1.5-.2-2.7-.4-3.5z"/>
+                <path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.6 15.6 18.9 13 24 13c3.1 0 5.8 1.1 8 3l6-6C34.5 5.1 29.5 3 24 3 16.3 3 9.6 7.3 6.3 14.7z"/>
+                <path fill="#4CAF50" d="M24 45c5.3 0 10.1-2 13.7-5.4l-6.3-5.3C29.3 36 26.8 37 24 37c-5.3 0-9.7-3.3-11.3-8l-6.5 5C9.5 40.6 16.2 45 24 45z"/>
+                <path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.3-2.3 4.2-4.2 5.6l6.3 5.3C40.4 36.5 43 30.8 43 24c0-1.5-.2-2.7-.4-3.5z"/>
+            </svg>
+            Masuk / Daftar sebagai Warga dengan Google
+        </a>
+
+        {{-- Divider --}}
+        <div class="flex items-center gap-3 my-7">
+            <div class="flex-1 h-px bg-slate-200"></div>
+            <span class="text-[11px] font-semibold uppercase tracking-wider text-slate-400">Login Petugas</span>
+            <div class="flex-1 h-px bg-slate-200"></div>
+        </div>
+
         <form id="loginForm" method="POST" action="{{ route('login') }}" novalidate>
             @csrf
 
-            {{-- Email atau NIK --}}
+            {{-- Email Petugas --}}
             <div class="mb-5">
                 <label for="login" class="block text-[13px] font-semibold text-slate-800 mb-2">
-                    Email atau NIK
+                    Email Petugas
                 </label>
                 <div class="field-wrapper relative">
-                    <input type="text" id="login" name="login" placeholder="Email petugas atau NIK warga" value="{{ old('login') }}"
+                    <input type="text" id="login" name="login" placeholder="Email admin/petugas" value="{{ old('login') }}"
                         autocomplete="username" autofocus class="field-input w-full h-12 pl-11 pr-4 border-[1.5px] rounded-xl text-sm text-slate-900 bg-slate-50 transition-colors duration-200
                                 {{ $errors->has('login')
         ? 'border-red-400 bg-red-50 shadow-[0_0_0_3px_rgba(220,38,38,.08)]'

@@ -109,7 +109,7 @@
                                     <div class="min-w-0">
                                         <div class="text-[10px] font-bold text-primary mb-0.5">#{{ $item->nomor_tiket }}</div>
                                         <div class="text-xs font-bold text-gray-800 truncate">{{ $item->nama_pelapor }}</div>
-                                        <div class="text-[10px] text-gray-400">{{ $item->created_at->diffForHumans() }}</div>
+                                        <div class="text-[10px] text-gray-400" title="{{ $item->created_at->diffForHumans() }}">{{ $item->created_at->format('d M Y, H:i') }}</div>
                                     </div>
                                 </div>
                             </td>
@@ -194,18 +194,6 @@
                                             @endforeach
                                         </div>
                                     </div>
-
-                                    {{-- Tombol Hapus (Super Admin Only) --}}
-                                    @if(Auth::user()->role === 'superadmin')
-                                        <form action="{{ route('admin.pengaduan.destroy', $item->id) }}" method="POST"
-                                            onsubmit="return confirm('Hapus pengaduan #{{ $item->nomor_tiket }}?')">
-                                            @csrf @method('DELETE')
-                                            <button type="submit"
-                                                class="w-8 h-8 flex items-center justify-center border border-gray-200 rounded-lg text-gray-400 hover:text-red-600 hover:border-red-200 hover:bg-red-50 transition-all">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </form>
-                                    @endif
                                 </div>
                             </td>
                         </tr>

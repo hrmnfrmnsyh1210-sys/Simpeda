@@ -47,6 +47,7 @@
                         <th class="px-6 py-4 border-b">Nama & Email</th>
                         <th class="px-6 py-4 border-b">Role</th>
                         <th class="px-6 py-4 border-b text-center">Status</th>
+                        <th class="px-6 py-4 border-b">Login Terakhir</th>
                         <th class="px-6 py-4 border-b text-center">Aksi</th>
                     </tr>
                 </thead>
@@ -90,6 +91,13 @@
                                     <span class="inline-flex items-center gap-1.5 px-2 py-1 rounded-full bg-gray-100 text-gray-500 text-[10px] font-bold uppercase">
                                         <span class="w-1.5 h-1.5 rounded-full bg-gray-400"></span> Nonaktif
                                     </span>
+                                @endif
+                            </td>
+                            <td class="px-6 py-4 text-xs text-gray-500">
+                                @if($user->last_login_at)
+                                    <span title="{{ $user->last_login_at->diffForHumans() }}">{{ $user->last_login_at->format('d M Y, H:i') }}</span>
+                                @else
+                                    <span class="text-gray-300 italic">Belum pernah login</span>
                                 @endif
                             </td>
                             <td class="px-6 py-4">

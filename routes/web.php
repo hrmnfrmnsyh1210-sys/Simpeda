@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\StrukturOrganisasiController;
 use App\Http\Controllers\Admin\UserAdminController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Auth\SocialAuthController;
 use App\Http\Controllers\Beranda\berandaUserController;
 use App\Http\Controllers\Beranda\DashboardWargaController;
 use App\Http\Controllers\Beranda\PengumumanPublikController;
@@ -27,9 +28,12 @@ Route::middleware('guest')->group(function () {
     Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [LoginController::class, 'login']);
 
-    // Pendaftaran akun masyarakat
+    // Pendaftaran akun masyarakat (Google Sign-In)
     Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
-    Route::post('/register', [RegisterController::class, 'register']);
+
+    // Masuk/daftar warga dengan akun Google
+    Route::get('/login/google', [SocialAuthController::class, 'redirectToGoogle'])->name('google.redirect');
+    Route::get('/login/google/callback', [SocialAuthController::class, 'handleGoogleCallback'])->name('google.callback');
 });
 
 Route::post('/logout', [LoginController::class, 'logout'])
@@ -48,7 +52,6 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/pengaduan/{id}', [PengaduanAdminController::class, 'show'])->name('pengaduan.show');
     Route::patch('/pengaduan/{id}/update-status', [PengaduanAdminController::class, 'updateStatus'])->name('pengaduan.updateStatus');
     Route::post('/pengaduan/{id}/tanggapan', [PengaduanAdminController::class, 'storeTanggapan'])->name('pengaduan.tanggapan.store');
-    Route::delete('/pengaduan/{id}', [PengaduanAdminController::class, 'destroy'])->name('pengaduan.destroy');
 
     // Kategori
     Route::get('/kategori', [KategoriController::class, 'index'])->name('kategori.index');
@@ -90,8 +93,14 @@ Route::get('/dashboard', function () {
 // --- Publik (beranda masyarakat) ---
 Route::get('/beranda', [berandaUserController::class, 'index'])->name('beranda');
 
-// Buat pengaduan: wajib login sebagai masyarakat (pengaduan terhubung ke akun)
+// Lengkapi profil (NIK, No. HP) untuk warga yang baru daftar via Google
 Route::middleware('auth')->group(function () {
+    Route::get('/lengkapi-profil', [SocialAuthController::class, 'showCompleteProfile'])->name('warga.lengkapi-profil');
+    Route::post('/lengkapi-profil', [SocialAuthController::class, 'storeCompleteProfile'])->name('warga.lengkapi-profil.store');
+});
+
+// Buat pengaduan: wajib login sebagai masyarakat (pengaduan terhubung ke akun)
+Route::middleware(['auth', 'profil.lengkap'])->group(function () {
     // Dashboard warga: aksi cepat + riwayat pengaduan milik akun
     Route::get('/dashboard-warga', [DashboardWargaController::class, 'index'])->name('warga.dashboard');
 
@@ -110,5 +119,5 @@ Route::get('/riwayat-pengaduan', [RiwayatController::class, 'index'])->name('riw
 Route::get('/pengumuman', [PengumumanPublikController::class, 'index'])->name('pengumuman.index');
 Route::get('/pengumuman/{slug}', [PengumumanPublikController::class, 'show'])->name('pengumuman.show');
 
-// FAQ publik (hardcoded)
-Route::view('/faq', 'content-app.content-faq')->name('faq.index');
+// FAQ digabung ke halaman Tentang
+Route::redirect('/faq', '/tentang#faq')->name('faq.index');

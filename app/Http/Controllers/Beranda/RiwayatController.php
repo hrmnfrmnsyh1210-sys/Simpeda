@@ -31,6 +31,11 @@ class RiwayatController extends Controller
             $query->where('status', $request->input('status'));
         }
 
+        // 3b. Fitur Filter Kategori
+        if ($request->filled('kategori')) {
+            $query->where('kategori', $request->input('kategori'));
+        }
+
         // 4. Urutkan berdasarkan data terbaru dan ambil pagination
         // Menggunakan 10 data per halaman
         $pengaduans = $query->latest()->paginate(10)->withQueryString();

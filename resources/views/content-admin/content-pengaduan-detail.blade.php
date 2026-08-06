@@ -306,22 +306,6 @@
                 @endforeach
             </div>
 
-            {{-- Hapus (superadmin only) --}}
-            @if(Auth::user()->role === 'superadmin')
-                <div class="bg-white rounded-radius border border-red-100 shadow-sm p-5">
-                    <h3 class="font-bold text-red-600 text-xs uppercase tracking-wider mb-3 flex items-center gap-2">
-                        <i class="bi bi-exclamation-triangle"></i> Zona Berbahaya
-                    </h3>
-                    <form action="{{ route('admin.pengaduan.destroy', $pengaduan->id) }}" method="POST"
-                          onsubmit="return confirm('Hapus permanen tiket #{{ $pengaduan->nomor_tiket }}? Tindakan ini tidak dapat diurungkan.')">
-                        @csrf @method('DELETE')
-                        <button type="submit"
-                            class="w-full py-2.5 bg-red-50 border border-red-200 text-red-600 font-bold rounded-lg hover:bg-red-600 hover:text-white transition-all text-xs">
-                            <i class="bi bi-trash mr-1"></i> Hapus Pengaduan Ini
-                        </button>
-                    </form>
-                </div>
-            @endif
         </div>
     </div>
 @endsection

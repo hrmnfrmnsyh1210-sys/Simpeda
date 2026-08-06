@@ -21,11 +21,14 @@ class User extends Authenticatable
         'name',
         'nik',
         'email',
+        'google_id',
+        'avatar',
         'nomor_hp',
         'rt_rw',
         'password',
         'role',
         'is_active',
+        'last_login_at',
     ];
 
     /**
@@ -57,6 +60,7 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'is_active' => 'boolean',
+            'last_login_at' => 'datetime',
         ];
     }
 

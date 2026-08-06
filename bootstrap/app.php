@@ -14,6 +14,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'superadmin' => \App\Http\Middleware\EnsureSuperAdmin::class,
             'admin' => \App\Http\Middleware\EnsureAdmin::class,
+            'profil.lengkap' => \App\Http\Middleware\EnsureMasyarakatProfileComplete::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

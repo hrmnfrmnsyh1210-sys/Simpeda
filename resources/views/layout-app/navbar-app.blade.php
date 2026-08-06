@@ -26,8 +26,6 @@
                     Pengaduan </a>
                 <a href="{{ route('pengumuman.index') }}"
                     class="nav-link px-4 py-2 rounded-lg text-sm font-medium text-white/80 hover:text-white hover:bg-white/10 transition-all">Pengumuman</a>
-                <a href="{{ route('faq.index') }}"
-                    class="nav-link px-4 py-2 rounded-lg text-sm font-medium text-white/80 hover:text-white hover:bg-white/10 transition-all">FAQ</a>
                 <a href="{{ route('tentang') }}"
                     class="nav-link px-4 py-2 rounded-lg text-sm font-medium text-white/80 hover:text-white hover:bg-white/10 transition-all">Tentang</a>
                 <a href="{{ route('riwayat') }}"
@@ -102,8 +100,6 @@
                 Pengaduan</a>
             <a href="{{ route('pengumuman.index') }}"
                 class="block px-3 py-2 rounded-lg text-sm font-medium text-white/80 hover:text-white hover:bg-white/10 transition">Pengumuman</a>
-            <a href="{{ route('faq.index') }}"
-                class="block px-3 py-2 rounded-lg text-sm font-medium text-white/80 hover:text-white hover:bg-white/10 transition">FAQ</a>
             <a href="{{ route('riwayat') }}"
                 class="block px-3 py-2 rounded-lg text-sm font-medium text-white/80 hover:text-white hover:bg-white/10 transition">Riwayat
                 Pengaduan</a>

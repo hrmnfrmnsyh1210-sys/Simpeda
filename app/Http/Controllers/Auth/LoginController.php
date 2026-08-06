@@ -29,12 +29,12 @@ class LoginController extends Controller
      */
     public function login(Request $request): RedirectResponse
     {
-        // 1. Validasi input (masyarakat pakai NIK, petugas pakai email)
+        // 1. Validasi input (form ini khusus login petugas dengan email; warga masuk lewat Google)
         $request->validate([
             'login' => ['required', 'string', 'max:255'],
             'password' => ['required', 'string', 'min:6'],
         ], [
-            'login.required' => 'Email atau NIK wajib diisi.',
+            'login.required' => 'Email wajib diisi.',
             'password.required' => 'Kata sandi wajib diisi.',
             'password.min' => 'Kata sandi minimal 6 karakter.',
         ]);
@@ -53,7 +53,7 @@ class LoginController extends Controller
             RateLimiter::hit($this->throttleKey($request));
 
             throw ValidationException::withMessages([
-                'login' => 'Email/NIK atau kata sandi yang Anda masukkan salah.',
+                'login' => 'Email atau kata sandi yang Anda masukkan salah.',
             ]);
         }
 
@@ -75,6 +75,9 @@ class LoginController extends Controller
 
         // 6. Regenerate session
         $request->session()->regenerate();
+
+        // 6b. Catat waktu login terakhir
+        $user->forceFill(['last_login_at' => now()])->save();
 
         // 7. Redirect berdasarkan role (Sudah diperbarui ke superadmin & admin)
         return redirect()->intended($this->redirectPath($user->role));
