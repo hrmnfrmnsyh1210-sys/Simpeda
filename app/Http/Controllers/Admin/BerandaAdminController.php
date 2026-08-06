@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\PageVisit;
 use App\Models\Pengaduan;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -20,6 +21,7 @@ class BerandaAdminController extends Controller
         $pengaduanProses = Pengaduan::where('status', 'Diproses')->count();
         $pengaduanSelesai = Pengaduan::where('status', 'Selesai')->count();
         $totalUser = User::count();
+        $pengunjungHariIni = PageVisit::whereDate('visited_date', today())->count();
 
         $recentPengaduan = Pengaduan::query()
             ->when(
@@ -51,6 +53,7 @@ class BerandaAdminController extends Controller
             'pengaduanProses',
             'pengaduanSelesai',
             'totalUser',
+            'pengunjungHariIni',
             'recentPengaduan',
         ));
     }

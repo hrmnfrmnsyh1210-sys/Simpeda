@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\ActivityLog;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
@@ -78,6 +79,15 @@ class LoginController extends Controller
 
         // 6b. Catat waktu login terakhir
         $user->forceFill(['last_login_at' => now()])->save();
+
+        // 6c. Catat kunjungan login ke Log Aktivitas
+        ActivityLog::create([
+            'user_id'    => $user->id,
+            'action'     => 'Login',
+            'target'     => $user->name,
+            'keterangan' => 'Berhasil masuk ke sistem (' . $user->role . ')',
+            'ip_address' => $request->ip(),
+        ]);
 
         // 7. Redirect berdasarkan role (Sudah diperbarui ke superadmin & admin)
         return redirect()->intended($this->redirectPath($user->role));

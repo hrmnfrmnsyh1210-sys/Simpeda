@@ -6,8 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Models\Pengaduan;
 use App\Models\RatingPengaduan;
 use App\Models\TanggapanPengaduan;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\UploadedFile;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -51,6 +53,83 @@ class PengaduanController extends Controller
     }
 
     /**
+     * Ekstrak tanggal & koordinat GPS dari metadata EXIF foto (jika ada).
+     * Hanya berlaku untuk JPEG dengan EXIF utuh — foto yang sudah dikompres/
+     * di-strip metadatanya (mis. lewat aplikasi chat) akan menghasilkan array kosong.
+     *
+     * @return array{tanggal?: \Carbon\Carbon, latitude?: float, longitude?: float}
+     */
+    private function extractExifData(UploadedFile $file): array
+    {
+        if (!function_exists('exif_read_data') || $file->getMimeType() !== 'image/jpeg') {
+            return [];
+        }
+
+        try {
+            $data = @exif_read_data($file->getRealPath(), 'ANY_TAG', true);
+        } catch (\Throwable $e) {
+            return [];
+        }
+
+        if (!$data) {
+            return [];
+        }
+
+        $result = [];
+
+        // Tanggal foto diambil
+        $tanggalMentah = $data['EXIF']['DateTimeOriginal'] ?? $data['IFD0']['DateTime'] ?? null;
+        if ($tanggalMentah) {
+            try {
+                $result['tanggal'] = Carbon::createFromFormat('Y:m:d H:i:s', $tanggalMentah);
+            } catch (\Throwable $e) {
+                // format tak dikenali, abaikan
+            }
+        }
+
+        // Koordinat GPS
+        $gps = $data['GPS'] ?? null;
+        if ($gps && isset($gps['GPSLatitude'], $gps['GPSLatitudeRef'], $gps['GPSLongitude'], $gps['GPSLongitudeRef'])) {
+            $lat = $this->gpsToDecimal($gps['GPSLatitude'], $gps['GPSLatitudeRef']);
+            $lng = $this->gpsToDecimal($gps['GPSLongitude'], $gps['GPSLongitudeRef']);
+
+            if ($lat !== null && $lng !== null) {
+                $result['latitude'] = $lat;
+                $result['longitude'] = $lng;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Konversi koordinat GPS format DMS (derajat/menit/detik, tiap elemen "num/den")
+     * dari EXIF menjadi desimal, dengan tanda negatif untuk S/W.
+     */
+    private function gpsToDecimal(array $dms, string $ref): ?float
+    {
+        if (count($dms) !== 3) {
+            return null;
+        }
+
+        $toFloat = function (string $bagian): float {
+            if (!str_contains($bagian, '/')) {
+                return (float) $bagian;
+            }
+            [$num, $den] = array_map('floatval', explode('/', $bagian, 2));
+            return $den != 0 ? $num / $den : 0.0;
+        };
+
+        $derajat = $toFloat($dms[0]);
+        $menit = $toFloat($dms[1]);
+        $detik = $toFloat($dms[2]);
+
+        $desimal = $derajat + ($menit / 60) + ($detik / 3600);
+
+        return in_array(strtoupper($ref), ['S', 'W']) ? -$desimal : $desimal;
+    }
+
+    /**
      * Simpan pengaduan baru dari form publik.
      */
     public function store(Request $request): RedirectResponse
@@ -90,31 +169,41 @@ class PengaduanController extends Controller
         // 2. Bungkus dalam DB transaction agar generate tiket + insert atomic
         $pengaduan = DB::transaction(function () use ($validated, $request) {
 
-            // 2a. Upload foto jika ada
+            // 2a. Upload foto jika ada + ekstraksi metadata EXIF (tanggal & GPS)
             $fotoPath = null;
+            $exif = [];
             if ($request->hasFile('foto')) {
-                $fotoPath = $request->file('foto')->store('pengaduan/foto', 'public');
+                $foto = $request->file('foto');
+                $exif = $this->extractExifData($foto);
+                $fotoPath = $foto->store('pengaduan/foto', 'public');
             }
+
+            // Jika koordinat tidak diisi lewat GPS browser, pakai koordinat dari EXIF foto sebagai cadangan
+            $latitude = $validated['latitude'] ?? $exif['latitude'] ?? null;
+            $longitude = $validated['longitude'] ?? $exif['longitude'] ?? null;
 
             // 2b. Generate nomor tiket di dalam transaction
             $nomorTiket = $this->generateNomorTiket();
 
             // 2c. Simpan ke database (terhubung ke akun yang login)
             return Pengaduan::create([
-                'user_id'          => Auth::id(),
-                'nomor_tiket'      => $nomorTiket,
-                'kategori'         => $validated['kategori'],
-                'nama_pelapor'     => $validated['nama_pelapor'],
-                'nomor_hp'         => $validated['nomor_hp'],
-                'rt_rw'            => $validated['rt_rw'],
-                'urgensi'          => $validated['urgensi'],
-                'judul'            => $validated['judul'],
-                'deskripsi'        => $validated['deskripsi'],
-                'foto'             => $fotoPath,
-                'latitude'         => $validated['latitude'] ?? null,
-                'longitude'        => $validated['longitude'] ?? null,
-                'alamat_koordinat' => $validated['alamat_koordinat'] ?? null,
-                'status'           => 'Menunggu',
+                'user_id'             => Auth::id(),
+                'nomor_tiket'         => $nomorTiket,
+                'kategori'            => $validated['kategori'],
+                'nama_pelapor'        => $validated['nama_pelapor'],
+                'nomor_hp'            => $validated['nomor_hp'],
+                'rt_rw'               => $validated['rt_rw'],
+                'urgensi'             => $validated['urgensi'],
+                'judul'               => $validated['judul'],
+                'deskripsi'           => $validated['deskripsi'],
+                'foto'                => $fotoPath,
+                'latitude'            => $latitude,
+                'longitude'           => $longitude,
+                'alamat_koordinat'    => $validated['alamat_koordinat'] ?? null,
+                'foto_diambil_pada'   => $exif['tanggal'] ?? null,
+                'foto_exif_latitude'  => $exif['latitude'] ?? null,
+                'foto_exif_longitude' => $exif['longitude'] ?? null,
+                'status'              => 'Menunggu',
             ]);
         });
 

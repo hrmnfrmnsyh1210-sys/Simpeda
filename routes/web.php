@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\LogController;
 use App\Http\Controllers\Admin\PengaduanAdminController;
 use App\Http\Controllers\Admin\PengaturanController;
 use App\Http\Controllers\Admin\PengumumanController;
+use App\Http\Controllers\Admin\StatistikController;
 use App\Http\Controllers\Admin\StrukturOrganisasiController;
 use App\Http\Controllers\Admin\UserAdminController;
 use App\Http\Controllers\Auth\LoginController;
@@ -56,6 +57,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // Kategori
     Route::get('/kategori', [KategoriController::class, 'index'])->name('kategori.index');
 
+    // Statistik Pengunjung
+    Route::get('/statistik-pengunjung', [StatistikController::class, 'index'])->name('statistik.index');
+
     // Struktur Organisasi Kantor Desa
     Route::get('/struktur', [StrukturOrganisasiController::class, 'index'])->name('struktur.index');
     Route::post('/struktur', [StrukturOrganisasiController::class, 'store'])->name('struktur.store');
@@ -78,6 +82,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
         // Log Aktivitas
         Route::get('/log', [LogController::class, 'index'])->name('log.index');
+        Route::get('/log/export/pdf', [LogController::class, 'exportPdf'])->name('log.exportPdf');
 
         // Pengaturan
         Route::get('/pengaturan', [PengaturanController::class, 'index'])->name('pengaturan');

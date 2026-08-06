@@ -16,6 +16,10 @@ return Application::configure(basePath: dirname(__DIR__))
             'admin' => \App\Http\Middleware\EnsureAdmin::class,
             'profil.lengkap' => \App\Http\Middleware\EnsureMasyarakatProfileComplete::class,
         ]);
+
+        $middleware->web(append: [
+            \App\Http\Middleware\LogPageVisit::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

@@ -5,14 +5,24 @@
 @section('content')
 
     {{-- Header --}}
-    <div class="mb-6">
-        <div class="flex items-center gap-2 text-sm text-gray-500 mb-2">
-            <a href="{{ route('admin.dashboard') }}" class="text-primary hover:underline">Dashboard</a>
-            <i class="bi bi-chevron-right text-[10px]"></i>
-            <span class="text-gray-400">Log Aktivitas</span>
+    <div class="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+            <div class="flex items-center gap-2 text-sm text-gray-500 mb-2">
+                <a href="{{ route('admin.dashboard') }}" class="text-primary hover:underline">Dashboard</a>
+                <i class="bi bi-chevron-right text-[10px]"></i>
+                <span class="text-gray-400">Log Aktivitas</span>
+            </div>
+            <h1 class="font-grotesk text-2xl font-bold text-gray-800 tracking-tight">Log Aktivitas</h1>
+            <p class="text-sm text-gray-500 mt-1">Riwayat kunjungan (login) dan aktivitas pengguna di sistem.</p>
         </div>
-        <h1 class="font-grotesk text-2xl font-bold text-gray-800 tracking-tight">Log Aktivitas</h1>
-        <p class="text-sm text-gray-500 mt-1">Riwayat seluruh aktivitas yang dilakukan oleh admin dan superadmin.</p>
+
+        <div class="flex items-center gap-2">
+            <a href="{{ route('admin.log.exportPdf', array_filter(['action' => request('action'), 'user_id' => request('user_id'), 'dari_tanggal' => request('dari_tanggal'), 'sampai_tanggal' => request('sampai_tanggal')])) }}"
+               target="_blank"
+               class="px-4 py-2 bg-white border border-[#e2e8f0] rounded-lg text-xs font-bold text-gray-600 hover:bg-red-50 hover:border-red-200 hover:text-red-600 transition-all flex items-center gap-2 shadow-sm">
+                <i class="bi bi-file-earmark-pdf"></i> Ekspor Laporan Kunjungan (PDF)
+            </a>
+        </div>
     </div>
 
     {{-- Filter --}}
@@ -21,14 +31,18 @@
         <div class="relative flex-1">
             <i class="bi bi-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
             <input type="text" name="action" value="{{ request('action') }}"
-                placeholder="Cari aksi (Update Status, Hapus...)"
+                placeholder="Cari aksi (Login, Update Status...)"
                 class="w-full pl-9 pr-4 py-2 bg-bg-base border border-[#e2e8f0] rounded-lg text-xs focus:border-primary outline-none">
         </div>
+        <input type="date" name="dari_tanggal" value="{{ request('dari_tanggal') }}"
+            class="px-3 py-2 bg-bg-base border border-[#e2e8f0] rounded-lg text-xs focus:border-primary outline-none">
+        <input type="date" name="sampai_tanggal" value="{{ request('sampai_tanggal') }}"
+            class="px-3 py-2 bg-bg-base border border-[#e2e8f0] rounded-lg text-xs focus:border-primary outline-none">
         <button type="submit"
             class="px-4 py-2 bg-primary text-white rounded-lg text-xs font-bold hover:bg-primary-dark transition-all">
             <i class="bi bi-funnel mr-1"></i> Filter
         </button>
-        @if(request()->hasAny(['action', 'user_id']))
+        @if(request()->hasAny(['action', 'user_id', 'dari_tanggal', 'sampai_tanggal']))
             <a href="{{ route('admin.log.index') }}"
                 class="px-4 py-2 bg-gray-100 text-gray-600 rounded-lg text-xs font-bold hover:bg-gray-200 transition-all flex items-center gap-1">
                 <i class="bi bi-x-circle"></i> Reset
@@ -59,6 +73,7 @@
                     @forelse($logs as $log)
                         @php
                             $actionColors = [
+                                'Login'           => 'bg-blue-50 text-blue-700',
                                 'Update Status'   => 'bg-amber-50 text-amber-700',
                                 'Hapus Pengaduan' => 'bg-red-50 text-red-700',
                                 'Tambah Akun'     => 'bg-green-50 text-green-700',

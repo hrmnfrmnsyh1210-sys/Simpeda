@@ -86,6 +86,12 @@
                                 <i class="bi bi-download mr-0.5"></i> Unduh
                             </a>
                         </p>
+                        @if($pengaduan->foto_diambil_pada)
+                            <div class="mt-3 px-3 py-2 bg-primary-light rounded-lg text-[11px] text-primary flex items-center justify-center gap-1.5">
+                                <i class="bi bi-calendar3"></i>
+                                Metadata EXIF: foto diambil pada {{ $pengaduan->foto_diambil_pada->translatedFormat('d M Y, H:i') }}
+                            </div>
+                        @endif
                     @else
                         <div class="flex flex-col items-center justify-center py-10 text-gray-300">
                             <i class="bi bi-image text-5xl mb-3"></i>
@@ -105,7 +111,18 @@
                 </div>
                 <div class="p-6">
                     @if($pengaduan->latitude && $pengaduan->longitude)
+                        @php
+                            $dariExif = $pengaduan->foto_exif_latitude
+                                && abs($pengaduan->latitude - $pengaduan->foto_exif_latitude) < 0.0001
+                                && abs($pengaduan->longitude - $pengaduan->foto_exif_longitude) < 0.0001;
+                        @endphp
                         {{-- Info koordinat --}}
+                        <div class="mb-3">
+                            <span class="px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide {{ $dariExif ? 'bg-amber-50 text-amber-700' : 'bg-blue-50 text-blue-700' }}">
+                                <i class="bi {{ $dariExif ? 'bi-image' : 'bi-phone' }}"></i>
+                                Sumber: {{ $dariExif ? 'Metadata EXIF Foto' : 'GPS Perangkat' }}
+                            </span>
+                        </div>
                         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
                             <div class="bg-primary-light rounded-xl p-3">
                                 <div class="text-[10px] text-gray-400 font-bold uppercase mb-1">Latitude</div>
@@ -123,6 +140,13 @@
                                 </a>
                             </div>
                         </div>
+
+                        @if(!$dariExif && $pengaduan->foto_exif_latitude && $pengaduan->foto_exif_longitude)
+                            <div class="mb-4 px-4 py-2.5 bg-amber-50 border border-amber-100 rounded-xl flex items-start gap-2 text-xs text-amber-700">
+                                <i class="bi bi-image mt-0.5 shrink-0"></i>
+                                <span>Foto juga memiliki koordinat EXIF berbeda: {{ $pengaduan->foto_exif_latitude }}, {{ $pengaduan->foto_exif_longitude }}</span>
+                            </div>
+                        @endif
 
                         @if($pengaduan->alamat_koordinat)
                             <div class="mb-4 px-4 py-2.5 bg-gray-50 border border-gray-100 rounded-xl flex items-start gap-2 text-xs text-gray-600">

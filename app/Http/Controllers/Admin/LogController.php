@@ -4,11 +4,12 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\ActivityLog;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 
 class LogController extends Controller
 {
-    public function index(Request $request)
+    private function filteredQuery(Request $request)
     {
         $query = ActivityLog::with('user')->latest();
 
@@ -20,8 +21,37 @@ class LogController extends Controller
             $query->where('user_id', $request->user_id);
         }
 
-        $logs = $query->paginate(20)->withQueryString();
+        if ($request->filled('dari_tanggal')) {
+            $query->whereDate('created_at', '>=', $request->dari_tanggal);
+        }
+
+        if ($request->filled('sampai_tanggal')) {
+            $query->whereDate('created_at', '<=', $request->sampai_tanggal);
+        }
+
+        return $query;
+    }
+
+    public function index(Request $request)
+    {
+        $logs = $this->filteredQuery($request)->paginate(20)->withQueryString();
 
         return view('content-admin.content-log', compact('logs'));
+    }
+
+    public function exportPdf(Request $request)
+    {
+        $logs = $this->filteredQuery($request)->get();
+
+        $pdf = Pdf::loadView('content-admin.pdf-log', [
+            'logs'           => $logs,
+            'filterAction'   => $request->action,
+            'filterDari'     => $request->dari_tanggal,
+            'filterSampai'   => $request->sampai_tanggal,
+        ])->setPaper('a4', 'landscape');
+
+        $filename = 'laporan-kunjungan-' . now()->format('Ymd-His') . '.pdf';
+
+        return $pdf->download($filename);
     }
 }

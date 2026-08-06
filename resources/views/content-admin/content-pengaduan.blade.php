@@ -17,7 +17,7 @@
         </div>
 
         <div class="flex items-center gap-2">
-            <a href="{{ route('admin.pengaduan.exportPdf', array_filter(['status' => request('status'), 'kategori' => request('kategori'), 'search' => request('search')])) }}"
+            <a href="{{ route('admin.pengaduan.exportPdf', array_filter(['status' => request('status'), 'kategori' => request('kategori'), 'search' => request('search'), 'dari_tanggal' => request('dari_tanggal'), 'sampai_tanggal' => request('sampai_tanggal')])) }}"
                target="_blank"
                class="px-4 py-2 bg-white border border-[#e2e8f0] rounded-lg text-xs font-bold text-gray-600 hover:bg-red-50 hover:border-red-200 hover:text-red-600 transition-all flex items-center gap-2 shadow-sm">
                 <i class="bi bi-file-earmark-pdf"></i> Ekspor PDF
@@ -79,6 +79,16 @@
                         <option value="{{ $stat }}" {{ request('status') == $stat ? 'selected' : '' }}>{{ $stat }}</option>
                     @endforeach
                 </select>
+
+                <input type="date" name="dari_tanggal" value="{{ request('dari_tanggal') }}" onchange="this.form.submit()"
+                    class="px-3 py-2 bg-white border border-[#e2e8f0] rounded-lg text-xs font-semibold text-gray-600 focus:border-primary outline-none transition-all">
+                <input type="date" name="sampai_tanggal" value="{{ request('sampai_tanggal') }}" onchange="this.form.submit()"
+                    class="px-3 py-2 bg-white border border-[#e2e8f0] rounded-lg text-xs font-semibold text-gray-600 focus:border-primary outline-none transition-all">
+
+                <button type="submit"
+                    class="px-4 py-2 bg-primary text-white rounded-lg text-xs font-bold hover:bg-primary-dark transition-all">
+                    <i class="bi bi-funnel mr-1"></i> Filter
+                </button>
             </form>
         </div>
 

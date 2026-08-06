@@ -52,6 +52,10 @@
                     class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm transition-all {{ request()->routeIs('admin.pengaduan.index') && request('status') === 'Diproses' ? 'bg-primary/20 text-blue-300 font-bold border-l-4 border-blue-400' : 'text-white/60 hover:bg-white/5 hover:text-white' }}">
                     <i class="bi bi-arrow-repeat"></i> <span>Sedang Diproses</span>
                 </a>
+                <a href="{{ route('admin.statistik.index') }}"
+                    class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm transition-all {{ request()->routeIs('admin.statistik.*') ? 'bg-primary/20 text-blue-300 font-bold border-l-4 border-blue-400' : 'text-white/60 hover:bg-white/5 hover:text-white' }}">
+                    <i class="bi bi-bar-chart-line"></i> <span>Statistik Pengunjung</span>
+                </a>
             </div>
         </div>
 

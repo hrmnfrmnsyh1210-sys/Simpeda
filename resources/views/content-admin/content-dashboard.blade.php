@@ -67,6 +67,17 @@
                 <div class="w-10 h-10 bg-blue-50 text-blue-500 rounded-xl flex items-center justify-center text-lg"><i class="bi bi-patch-check"></i></div>
             </div>
         </div>
+        <a href="{{ route('admin.statistik.index') }}" class="bg-white p-5 rounded-radius border border-[#e2e8f0] shadow-sm relative overflow-hidden group hover:shadow-md hover:-translate-y-1 transition-all block">
+            <div class="absolute top-0 left-0 right-0 h-1 bg-violet-500"></div>
+            <div class="flex justify-between items-start">
+                <div>
+                    <div class="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1">Pengunjung Hari Ini</div>
+                    <div class="font-grotesk text-3xl font-bold text-gray-800">{{ number_format($pengunjungHariIni) }}</div>
+                    <div class="text-[10px] text-primary font-bold mt-1">Lihat statistik lengkap &rarr;</div>
+                </div>
+                <div class="w-10 h-10 bg-violet-50 text-violet-500 rounded-xl flex items-center justify-center text-lg"><i class="bi bi-bar-chart-line"></i></div>
+            </div>
+        </a>
     </div>
 
     {{-- Main Content Grid --}}

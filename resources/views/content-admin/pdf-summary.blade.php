@@ -290,12 +290,14 @@
 <div class="page-wrap">
 
     {{-- ═══ FILTER AKTIF ═══ --}}
-    @if($filterStatus || $filterKategori || $filterSearch)
+    @if($filterStatus || $filterKategori || $filterSearch || $filterDari || $filterSampai)
         <div class="filter-banner">
             <strong>Filter Aktif:</strong>
             @if($filterSearch) &nbsp;&#x2022; Pencarian: &ldquo;{{ $filterSearch }}&rdquo;@endif
             @if($filterKategori) &nbsp;&#x2022; Kategori: {{ $filterKategori }}@endif
             @if($filterStatus) &nbsp;&#x2022; Status: {{ $filterStatus }}@endif
+            @if($filterDari) &nbsp;&#x2022; Dari: {{ \Carbon\Carbon::parse($filterDari)->format('d/m/Y') }}@endif
+            @if($filterSampai) &nbsp;&#x2022; Sampai: {{ \Carbon\Carbon::parse($filterSampai)->format('d/m/Y') }}@endif
         </div>
     @endif
 
@@ -382,6 +384,36 @@
             </td>
         </tr>
     </table>
+
+    {{-- ═══ REKAP PER KATEGORI PER BULAN ═══ --}}
+    @if($byKategoriPerBulan->isNotEmpty())
+        <div class="section-line">
+            <span class="section-title">Rekap per Kategori per Bulan</span>
+        </div>
+        @php $semuaKategori = $pengaduans->pluck('kategori')->unique()->sort()->values(); @endphp
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th style="width: 90px;">Periode</th>
+                    @foreach($semuaKategori as $kat)
+                        <th style="text-align: center;">{{ $kat }}</th>
+                    @endforeach
+                    <th style="width: 55px; text-align: center;">Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($byKategoriPerBulan as $bulan => $perKategori)
+                    <tr class="{{ $loop->even ? 'row-even' : 'row-odd' }}">
+                        <td class="td-name">{{ $bulan }}</td>
+                        @foreach($semuaKategori as $kat)
+                            <td style="text-align: center;">{{ $perKategori[$kat] ?? 0 }}</td>
+                        @endforeach
+                        <td style="text-align: center; font-weight: 800;">{{ $perKategori->sum() }}</td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    @endif
 
     {{-- ═══ TABEL DETAIL ═══ --}}
     <div class="section-line">

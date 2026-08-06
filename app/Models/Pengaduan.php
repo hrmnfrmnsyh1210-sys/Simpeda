@@ -22,11 +22,15 @@ class Pengaduan extends Model
         'latitude',
         'longitude',
         'alamat_koordinat',
+        'foto_diambil_pada',
+        'foto_exif_latitude',
+        'foto_exif_longitude',
     ];
 
     protected $casts = [
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
+        'created_at'        => 'datetime',
+        'updated_at'        => 'datetime',
+        'foto_diambil_pada' => 'datetime',
     ];
 
     public function user()

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\ActivityLog;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -65,6 +66,14 @@ class SocialAuthController extends Controller
         request()->session()->regenerate();
 
         $user->forceFill(['last_login_at' => now()])->save();
+
+        ActivityLog::create([
+            'user_id'    => $user->id,
+            'action'     => 'Login',
+            'target'     => $user->name,
+            'keterangan' => 'Berhasil masuk ke sistem (' . $user->role . ') via Google',
+            'ip_address' => request()->ip(),
+        ]);
 
         if (empty($user->nik) || empty($user->nomor_hp)) {
             return redirect()->route('warga.lengkapi-profil');

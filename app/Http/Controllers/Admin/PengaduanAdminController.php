@@ -40,6 +40,14 @@ class PengaduanAdminController extends Controller
             });
         }
 
+        // Filter berdasarkan Periode/Rentang Tanggal
+        if ($request->filled('dari_tanggal')) {
+            $query->whereDate('created_at', '>=', $request->dari_tanggal);
+        }
+        if ($request->filled('sampai_tanggal')) {
+            $query->whereDate('created_at', '<=', $request->sampai_tanggal);
+        }
+
         // Ambil data dengan pagination
         $pengaduans = $query->paginate(10)->withQueryString();
 
@@ -133,6 +141,12 @@ class PengaduanAdminController extends Controller
                     ->orWhere('nomor_tiket', 'like', "%$search%");
             });
         }
+        if ($request->filled('dari_tanggal')) {
+            $query->whereDate('created_at', '>=', $request->dari_tanggal);
+        }
+        if ($request->filled('sampai_tanggal')) {
+            $query->whereDate('created_at', '<=', $request->sampai_tanggal);
+        }
 
         $pengaduans = $query->get();
 
@@ -144,25 +158,34 @@ class PengaduanAdminController extends Controller
             'ditolak'  => Pengaduan::where('status', 'Ditolak')->count(),
         ];
 
-        $byKategori = Pengaduan::selectRaw('kategori, count(*) as jumlah')
-            ->groupBy('kategori')
-            ->orderByDesc('jumlah')
-            ->pluck('jumlah', 'kategori');
+        // Rekap kategori & urgensi dihitung dari data yang SUDAH difilter (termasuk periode),
+        // bukan dari seluruh tabel, agar konsisten dengan "Rekap per Kategori per Periode".
+        $byKategori = $pengaduans->groupBy('kategori')
+            ->map->count()
+            ->sortDesc();
 
-        $byUrgensi = Pengaduan::selectRaw('urgensi, count(*) as jumlah')
-            ->groupBy('urgensi')
-            ->orderByDesc('jumlah')
-            ->pluck('jumlah', 'urgensi');
+        $byUrgensi = $pengaduans->groupBy('urgensi')
+            ->map->count()
+            ->sortDesc();
+
+        // Rekap per kategori per bulan (untuk melihat tren tiap periode)
+        $byKategoriPerBulan = $pengaduans
+            ->sortBy('created_at')
+            ->groupBy(fn ($item) => $item->created_at->translatedFormat('M Y'))
+            ->map(fn ($group) => $group->groupBy('kategori')->map->count());
 
         $pdf = Pdf::loadView('content-admin.pdf-summary', compact(
             'pengaduans',
             'stats',
             'byKategori',
             'byUrgensi',
+            'byKategoriPerBulan',
         ) + [
             'filterStatus'   => $request->status,
             'filterKategori' => $request->kategori,
             'filterSearch'   => $request->search,
+            'filterDari'     => $request->dari_tanggal,
+            'filterSampai'   => $request->sampai_tanggal,
         ])->setPaper('a4', 'landscape');
 
         $filename = 'laporan-pengaduan-' . now()->format('Ymd-His') . '.pdf';
