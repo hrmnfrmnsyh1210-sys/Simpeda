@@ -107,7 +107,7 @@
                 <div>
                     {{-- SiMPeDa name --}}
                     <div class="font-extrabold text-xl text-white tracking-tight">SiMPeDa</div>
-                    <div class="text-white/60 text-xs mt-0.5">Sistem Manajemen Pengaduan Desa</div>
+                    <div class="text-white/60 text-xs mt-0.5">Sistem Pengaduan Masyarakat Desa</div>
                 </div>
             </div>
 

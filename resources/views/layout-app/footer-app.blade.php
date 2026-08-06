@@ -11,7 +11,7 @@
                         class="w-9 h-9 rounded-xl object-contain bg-white p-1">
                     <div>
                         <div class="font-extrabold text-white text-lg leading-none">SiMPeDa</div>
-                        <div class="text-slate-500 text-xs">Sistem Manajemen Pengaduan Desa</div>
+                        <div class="text-slate-500 text-xs">Sistem Pengaduan Masyarakat Desa</div>
                     </div>
                 </div>
                 <p class="text-sm leading-relaxed text-slate-400 max-w-xs">

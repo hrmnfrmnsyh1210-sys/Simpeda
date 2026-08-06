@@ -303,6 +303,11 @@
 
             {{-- Hasil pencarian --}}
             @if(isset($pengaduan))
+            @php
+                // Nama pelapor hanya di-prefill otomatis untuk pemilik tiket yang sedang login.
+                // Pengunjung lain (belum login / bukan pemilik) tidak boleh tahu siapa pelapornya.
+                $isPemilikTiket = auth()->check() && $pengaduan->user_id && auth()->id() === $pengaduan->user_id;
+            @endphp
             <div class="space-y-5">
                 {{-- Header tiket --}}
                 <div class="bg-brand-50 border border-brand-100 rounded-2xl p-5">
@@ -438,7 +443,7 @@
                         <form action="{{ route('pengaduan.lacak.tanggapan') }}" method="POST" class="border-t border-slate-100 pt-4 space-y-3">
                             @csrf
                             <input type="hidden" name="nomor_tiket" value="{{ $pengaduan->nomor_tiket }}">
-                            <input type="text" name="nama_pengirim" value="{{ old('nama_pengirim', $pengaduan->nama_pelapor) }}" required
+                            <input type="text" name="nama_pengirim" value="{{ old('nama_pengirim', $isPemilikTiket ? $pengaduan->nama_pelapor : null) }}" required
                                 placeholder="Nama Anda"
                                 class="form-input w-full px-4 py-2.5 border-[1.5px] border-slate-200 rounded-xl text-sm">
                             <textarea name="isi" rows="3" required minlength="3" placeholder="Tulis balasan / pertanyaan Anda..."
@@ -500,7 +505,7 @@
                                 </div>
 
                                 <input type="text" name="nama_pelapor" required maxlength="100"
-                                    value="{{ old('nama_pelapor', $pengaduan->nama_pelapor) }}"
+                                    value="{{ old('nama_pelapor', $isPemilikTiket ? $pengaduan->nama_pelapor : null) }}"
                                     placeholder="Nama Anda"
                                     class="form-input w-full px-4 py-2.5 border-[1.5px] border-slate-200 rounded-xl text-sm">
 
